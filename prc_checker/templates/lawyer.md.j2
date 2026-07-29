@@ -1,0 +1,37 @@
+# Legal Counsel Brief — Title & Tenure Opinion
+**Subject Plot**: {{ report.village }} CTS {{ report.cts }}  
+**District**: {{ report.district or '[Pending Verification]' }} (Mumbai)
+
+---
+
+### I. Statutory Framework & Tenure Analysis
+{% if report.statutory_mappings %}
+| Statute / Regulation | Clause / Section | Legal Implication |
+|---|---|---|
+{% for stat in report.statutory_mappings %}
+| **{{ stat.statute }}** | {{ stat.section }} | {{ stat.implication }} |
+{% endfor %}
+{% else %}
+* **Maharashtra Land Revenue Code (MLRC) 1966 Section 44**: Governs Non-Agricultural (NA) permission requirements.
+* **Bombay Municipal Corporation Act Section 92**: Governs leasehold renewal and municipal consent for transfer.
+{% endif %}
+
+---
+
+### II. Precedent & Case Law References
+{% if report.precedents %}
+{% for prec in report.precedents %}
+> [!IMPORTANT]
+> **{{ prec.case_name }}** (`{{ prec.citation }}`): {{ prec.relevance }}
+
+{% endfor %}
+{% else %}
+* *State of Maharashtra v. Dudhwala Builders*: Transfer of Municipal C.I.T. leaseholds requires explicit Estate Dept NOC.
+{% endif %}
+
+---
+
+### III. Title Flow & Encumbrances
+* **Original Lease Grant**: {{ report.original_lease_grant or '[Pending Verification]' }}
+* **Active Lessee**: {{ report.active_lessee or '[Pending Verification]' }}
+* **Encumbrance Status**: {{ report.lease_status or '[Pending Verification]' }}

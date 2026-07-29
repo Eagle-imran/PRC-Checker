@@ -1,0 +1,39 @@
+# Promoter Executive Brief — {{ report.village }} CTS {{ report.cts }}
+
+> **Executive Summary for Project Development & Redevelopment**
+
+---
+
+### 1. Key Plot Metrics
+| Parameter | Value |
+|---|---|
+| **Location / Village** | {{ report.village }} |
+| **CTS Number** | **{{ report.cts }}** |
+| **Plot Area** | {{ (report.area_sqm ~ ' Sq. Mtrs.') if report.area_sqm else '[Pending Field Survey / Vision Read]' }} |
+| **Land Tenure** | {{ report.tenure or '[Pending Verification]' }} |
+| **Active Developer / Lessee** | {{ report.active_lessee or '[Pending Verification]' }} |
+
+---
+
+### 2. Redevelopment Risk Summary
+{% if report.risk_flags %}
+{% for flag in report.risk_flags %}
+* **{{ flag.risk_type }}** (`{{ flag.severity }}`): {{ flag.description }}
+{% endfor %}
+{% else %}
+* No critical land title risks flagged during preliminary fetch.
+{% endif %}
+
+---
+
+### 3. Action Items Register
+| Responsible | Priority | Task Description | Deadline Trigger |
+|---|---|---|---|
+{% if report.action_items %}
+{% for item in report.action_items %}
+| **{{ item.responsible }}** | `{{ item.priority }}` | {{ item.task }} | {{ item.deadline_basis }} |
+{% endfor %}
+{% else %}
+| **Lawyer** | `HIGH` | Complete Title Search Report at Sub-Registrar Office | Prior to MoU Signing |
+| **Surveyor** | `MEDIUM` | Demarcate physical boundaries against CTS Sheet {{ report.sheet_no or '284' }} | Prior to Plan Submission |
+{% endif %}

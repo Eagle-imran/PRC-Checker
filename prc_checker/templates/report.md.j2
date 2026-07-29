@@ -1,0 +1,64 @@
+# Property Title Audit Report — {{ report.village }} CTS {{ report.cts }}
+
+## Block 1: Property Identification & Details
+| Attribute | Record Value |
+|---|---|
+| **Division / Village** | {{ report.village }} |
+| **Cadastral Survey (CTS) No.** | **{{ report.cts }}** |
+| **Sheet Number** | {{ report.sheet_no or '[Pending Verification]' }} |
+| **Register No. / Page No.** | Register {{ report.register_no or '—' }} · Page {{ report.page_no or '—' }} |
+| **Total Plot Area** | {{ (report.area_sqm ~ ' Sq. Mtrs.') if report.area_sqm else '[Pending Verification]' }} |
+| **Tenure** | {{ report.tenure or '[Pending Verification]' }} |
+
+## Block 2: Present Title & Ownership
+* **Active Lessee (Holder)**: {{ report.active_lessee or '[Pending Vision Read / Verification]' }}
+* **Active Lessor**: {{ report.active_lessor or '[Pending Vision Read / Verification]' }}
+* **Cancelled / Surrendered Holders**:
+{% if report.cancelled_holders %}
+{% for holder in report.cancelled_holders %}
+  * `{{ holder }}`
+{% endfor %}
+{% else %}
+  * *None recorded / Pending Vision Read*
+{% endif %}
+
+## Block 3: Key Instruments & Dates
+* **Active Lease Deed No.**: {{ report.active_lease_deed or '[Pending Verification]' }}
+* **Original Grant / Lease**: {{ report.original_lease_grant or '[Pending Verification]' }}
+* **Lease Status**: {{ report.lease_status or '[Pending Verification]' }}
+
+## Block 4: Chronological Chain of Title Flow
+{% if report.transfer_chain %}
+```mermaid
+graph TD
+{% for source, target in report.transfer_chain %}
+    N{{ loop.index0 }}["{{ source }}"] --> N{{ loop.index }}["{{ target }}"]
+{% endfor %}
+```
+{% else %}
+*Chain of title pending AI Vision OCR extraction.*
+{% endif %}
+
+## Block 5: Legal Risk Flags & Verification Points
+{% if report.risk_flags %}
+{% for flag in report.risk_flags %}
+> [!{{ 'WARNING' if flag.severity == 'HIGH' else 'NOTE' }}]
+> **{{ flag.risk_type }}**: {{ flag.description }}
+
+{% endfor %}
+{% else %}
+> [!NOTE]
+> **Verification Status**: Initial fetch complete. Detailed risk extraction pending vision read pass.
+{% endif %}
+
+## Block 6: 5-Dimension Confidence Scorecard
+| Dimension | Score (1-5) | Assessment Notes |
+|---|---|---|
+{% if report.confidence_scores %}
+{% for score in report.confidence_scores %}
+| **{{ score.dimension }}** | {{ score.score }} | {{ score.notes }} |
+{% endfor %}
+| **TOTAL SCORE** | **{{ report.total_score or 0 }} / 100** | **{{ report.confidence_rating or 'UNASSESSED' }}** |
+{% else %}
+| **Initial Assessment** | Pending | Detailed scorecard requires vision OCR extraction |
+{% endif %}

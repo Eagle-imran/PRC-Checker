@@ -1,0 +1,33 @@
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+
+# Operating system & IDE files
+.DS_Store
+Thumbs.db
+.kilo/
+
+# Output artifacts & scratch files
+prcards/
+.captcha_input.txt
+.captcha_*.png
+*.sqlite
+*.db
+.tempmediaStorage/
+
+# Testing & Linting cache
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Build & distribution
+*.egg-info/
+dist/
+build/

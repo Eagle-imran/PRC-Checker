@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Property Card — {{ village }} CTS {{ cts }}</title>
+    <style>
+        {% include "styles.css.j2" %}
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-main); color: var(--text-main); padding: 2rem; margin: 0; }
+        .card-container { max-width: 1000px; margin: 0 auto; background: var(--bg-card); padding: 1.5rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .header { border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .title { font-size: 1.4rem; font-weight: 700; color: var(--accent-blue); }
+        .meta { color: var(--text-muted); font-size: 0.9rem; }
+        .card-img { width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-color); background: #fff; }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="header">
+            <div class="title">Property Card — {{ village }} CTS {{ cts }}</div>
+            <div class="meta">Fetched: {{ fetched_at }}</div>
+        </div>
+        <img class="card-img" src="{{ fname }}.jpg" alt="Property Card {{ village }} CTS {{ cts }}" />
+    </div>
+</body>
+</html>
