@@ -5,13 +5,14 @@ from __future__ import annotations
 
 import tempfile
 from pathlib import Path
+
 from prc_checker.dashboard import generate_dashboard_html
 from prc_checker.models import CardResult, TitleReportData
 from prc_checker.reports import (
     generate_clean_html,
-    generate_title_report_md,
-    generate_promoter_brief,
     generate_lawyer_brief,
+    generate_promoter_brief,
+    generate_title_report_md,
 )
 
 

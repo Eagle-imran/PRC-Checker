@@ -4,11 +4,10 @@ Populates Lawyer Legal Counsel Briefs with relevant case citations and legal rat
 """
 from __future__ import annotations
 
-from typing import List, Optional
 from .models import PrecedentRef, TitleReportData
 
 # Precedent Case Law Registry
-PRECEDENT_REGISTRY: List[tuple[list[str], PrecedentRef]] = [
+PRECEDENT_REGISTRY: list[tuple[list[str], PrecedentRef]] = [
     # 1. Collector Class II & Unearned Income Premium
     (
         ["class ii", "class 2", "collector", "b-category", "भोगवटदार वर्ग-२"],
@@ -48,7 +47,7 @@ PRECEDENT_REGISTRY: List[tuple[list[str], PrecedentRef]] = [
 ]
 
 
-def get_precedents_for_tenure(tenure: Optional[str]) -> List[PrecedentRef]:
+def get_precedents_for_tenure(tenure: str | None) -> list[PrecedentRef]:
     """Analyze tenure string and return applicable Bombay High Court and Supreme Court case citations."""
     if not tenure:
         return [
@@ -60,7 +59,7 @@ def get_precedents_for_tenure(tenure: Optional[str]) -> List[PrecedentRef]:
         ]
 
     tenure_lower = tenure.lower()
-    matched_precedents: List[PrecedentRef] = []
+    matched_precedents: list[PrecedentRef] = []
     seen_citations = set()
 
     for keywords, precedent in PRECEDENT_REGISTRY:

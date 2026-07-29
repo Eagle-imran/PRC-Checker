@@ -7,7 +7,7 @@ import csv
 import tempfile
 from pathlib import Path
 
-from prc_checker.exporters import generate_excel_and_csv, HAS_OPENPYXL
+from prc_checker.exporters import HAS_OPENPYXL, generate_excel_and_csv
 from prc_checker.models import CardResult
 
 

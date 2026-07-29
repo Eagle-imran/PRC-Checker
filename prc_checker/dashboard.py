@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+
 from jinja2 import Environment, FileSystemLoader
 
 from .models import CardResult

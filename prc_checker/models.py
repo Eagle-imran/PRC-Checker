@@ -3,7 +3,6 @@ Pydantic Data Models for Property Cards, Title Reports, Briefs, and Manifests.
 """
 from __future__ import annotations
 
-from typing import List, Optional, Tuple
 from pydantic import BaseModel, Field
 
 
@@ -19,8 +18,8 @@ class TitleHolder(BaseModel):
     name: str = Field(description="Holder or entity name")
     role: str = Field(default="Lessee", description="Lessee, Lessor, Owner, etc.")
     is_active: bool = Field(default=True, description="True if active unbracketed, False if cancelled/bracketed")
-    deed_no: Optional[str] = Field(default=None, description="Deed / Instrument registration number")
-    deed_date: Optional[str] = Field(default=None, description="Date of instrument execution or mutation")
+    deed_no: str | None = Field(default=None, description="Deed / Instrument registration number")
+    deed_date: str | None = Field(default=None, description="Date of instrument execution or mutation")
 
 
 class ActionItem(BaseModel):
@@ -51,26 +50,26 @@ class TitleReportData(BaseModel):
     """
     cts: str
     village: str
-    district: Optional[str] = None
-    sheet_no: Optional[str] = None
-    register_no: Optional[str] = None
-    page_no: Optional[str] = None
-    area_sqm: Optional[float] = None
-    tenure: Optional[str] = None
-    active_lessee: Optional[str] = None
-    active_lessor: Optional[str] = None
-    cancelled_holders: List[str] = Field(default_factory=list)
-    active_lease_deed: Optional[str] = None
-    original_lease_grant: Optional[str] = None
-    lease_status: Optional[str] = None
-    transfer_chain: List[Tuple[str, str]] = Field(default_factory=list)
-    risk_flags: List[RiskFlag] = Field(default_factory=list)
-    confidence_scores: List[dict] = Field(default_factory=list)
-    total_score: Optional[int] = None
-    confidence_rating: Optional[str] = None
-    action_items: List[ActionItem] = Field(default_factory=list)
-    statutory_mappings: List[StatutoryMapping] = Field(default_factory=list)
-    precedents: List[PrecedentRef] = Field(default_factory=list)
+    district: str | None = None
+    sheet_no: str | None = None
+    register_no: str | None = None
+    page_no: str | None = None
+    area_sqm: float | None = None
+    tenure: str | None = None
+    active_lessee: str | None = None
+    active_lessor: str | None = None
+    cancelled_holders: list[str] = Field(default_factory=list)
+    active_lease_deed: str | None = None
+    original_lease_grant: str | None = None
+    lease_status: str | None = None
+    transfer_chain: list[tuple[str, str]] = Field(default_factory=list)
+    risk_flags: list[RiskFlag] = Field(default_factory=list)
+    confidence_scores: list[dict] = Field(default_factory=list)
+    total_score: int | None = None
+    confidence_rating: str | None = None
+    action_items: list[ActionItem] = Field(default_factory=list)
+    statutory_mappings: list[StatutoryMapping] = Field(default_factory=list)
+    precedents: list[PrecedentRef] = Field(default_factory=list)
 
 
 class CardResult(BaseModel):
@@ -79,19 +78,19 @@ class CardResult(BaseModel):
     village: str
     district: str
     status: str
-    file_jpg: Optional[str] = None
-    file_html: Optional[str] = None
-    file_report: Optional[str] = None
-    file_promoter_brief: Optional[str] = None
-    file_lawyer_brief: Optional[str] = None
-    file_json: Optional[str] = None
+    file_jpg: str | None = None
+    file_html: str | None = None
+    file_report: str | None = None
+    file_promoter_brief: str | None = None
+    file_lawyer_brief: str | None = None
+    file_json: str | None = None
     bytes: int = 0
     detail: str = "Success"
-    report_data: Optional[TitleReportData] = None
+    report_data: TitleReportData | None = None
 
 
 class Manifest(BaseModel):
     """Batch execution summary manifest."""
     village: str
     district: str
-    results: List[CardResult]
+    results: list[CardResult]

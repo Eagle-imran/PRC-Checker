@@ -4,11 +4,10 @@ BMC Lease Regulations, and Collector Land Rules. Populates Lawyer Legal Briefs w
 """
 from __future__ import annotations
 
-from typing import List, Optional
 from .models import StatutoryMapping, TitleReportData
 
 # Statutory Rulebook Registry
-STATUTORY_REGISTRY: List[tuple[list[str], StatutoryMapping]] = [
+STATUTORY_REGISTRY: list[tuple[list[str], StatutoryMapping]] = [
     # 1. Occupant Class II / Collector Land
     (
         ["class ii", "class 2", "collector", "b-category", "भोगवटदार वर्ग-२"],
@@ -57,7 +56,7 @@ STATUTORY_REGISTRY: List[tuple[list[str], StatutoryMapping]] = [
 ]
 
 
-def get_statutory_mappings_for_tenure(tenure: Optional[str]) -> List[StatutoryMapping]:
+def get_statutory_mappings_for_tenure(tenure: str | None) -> list[StatutoryMapping]:
     """Analyze tenure string and return applicable statutory mappings under Maharashtra land laws."""
     if not tenure:
         # Default fallback if tenure is pending verification
@@ -70,7 +69,7 @@ def get_statutory_mappings_for_tenure(tenure: Optional[str]) -> List[StatutoryMa
         ]
 
     tenure_lower = tenure.lower()
-    matched_mappings: List[StatutoryMapping] = []
+    matched_mappings: list[StatutoryMapping] = []
     seen_sections = set()
 
     for keywords, mapping in STATUTORY_REGISTRY:

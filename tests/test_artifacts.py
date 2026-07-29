@@ -1,8 +1,8 @@
 """
 Unit tests for build_card_artifacts engine in prc_checker.artifacts.
 """
-import base64
 from pathlib import Path
+
 from prc_checker.artifacts import build_card_artifacts
 
 

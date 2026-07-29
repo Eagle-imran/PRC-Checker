@@ -3,12 +3,12 @@ Pytest Unit Tests for Title Audit Reports, Promoter Briefs, Lawyer Briefs & HTML
 """
 from __future__ import annotations
 
-from prc_checker.models import TitleReportData, RiskFlag
+from prc_checker.models import RiskFlag, TitleReportData
 from prc_checker.reports import (
     generate_clean_html,
-    generate_title_report_md,
-    generate_promoter_brief,
     generate_lawyer_brief,
+    generate_promoter_brief,
+    generate_title_report_md,
 )
 
 

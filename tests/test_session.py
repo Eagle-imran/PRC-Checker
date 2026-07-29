@@ -7,7 +7,8 @@ import base64
 import tempfile
 from pathlib import Path
 from unittest.mock import MagicMock
-from prc_checker.session import Session, ANCHOR, SUBURBAN_OFFICES
+
+from prc_checker.session import ANCHOR, SUBURBAN_OFFICES, Session
 
 
 def test_session_initialization():

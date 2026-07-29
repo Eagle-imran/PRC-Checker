@@ -9,13 +9,14 @@ import logging
 import re
 import sys
 from pathlib import Path
+
 from playwright.sync_api import sync_playwright
 
-from .logger import setup_logger
-from .models import CardResult, Manifest
-from .session import Session, ANCHOR, SUBURBAN_OFFICES
 from .dashboard import generate_dashboard_html
 from .exporters import generate_excel_and_csv, generate_sqlite
+from .logger import setup_logger
+from .models import CardResult, Manifest
+from .session import ANCHOR, SUBURBAN_OFFICES, Session
 
 
 def run(args) -> int:

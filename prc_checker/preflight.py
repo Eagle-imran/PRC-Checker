@@ -6,9 +6,9 @@ Saves 15-30s per invalid plot query and avoids unnecessary CAPTCHA solves.
 from __future__ import annotations
 
 import time
-import urllib.request
 import urllib.parse
-from typing import Optional
+import urllib.request
+
 from pydantic import BaseModel, Field
 
 from .logger import setup_logger
@@ -25,7 +25,7 @@ class PreflightResult(BaseModel):
     cts: str
     district: str = "23"
     exists: bool = True
-    area_gis_sqm: Optional[float] = Field(default=None, description="Independent GIS plot area in Sq Mtrs if available")
+    area_gis_sqm: float | None = Field(default=None, description="Independent GIS plot area in Sq Mtrs if available")
     response_time_ms: float = Field(default=0.0, description="HTTP preflight screening latency in milliseconds")
     detail: str = Field(default="Plot verified on preflight", description="Preflight status detail message")
 

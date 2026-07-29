@@ -11,6 +11,7 @@
 MahaBhulekh PR Card fetcher — Root Wrapper Script.
 """
 import sys
+
 from prc_checker.cli import main
 
 if __name__ == "__main__":

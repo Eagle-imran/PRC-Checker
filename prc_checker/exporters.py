@@ -6,11 +6,12 @@ from __future__ import annotations
 
 import csv
 from pathlib import Path
+
 from .models import CardResult
 
 try:
     import openpyxl
-    from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+    from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
     from openpyxl.utils import get_column_letter
     HAS_OPENPYXL = True
 except ImportError:

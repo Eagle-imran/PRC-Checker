@@ -2,6 +2,7 @@
 Unit tests for CardVisionRead and apply_vision_read_to_artifacts in prc_checker.vision.
 """
 from pathlib import Path
+
 from prc_checker.vision import CardVisionRead, apply_vision_read_to_artifacts
 
 

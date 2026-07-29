@@ -10,9 +10,9 @@ from pathlib import Path
 from .models import CardResult, TitleReportData
 from .reports import (
     generate_clean_html,
-    generate_title_report_md,
-    generate_promoter_brief,
     generate_lawyer_brief,
+    generate_promoter_brief,
+    generate_title_report_md,
 )
 
 
@@ -37,8 +37,8 @@ def build_card_artifacts(
     clean_html = generate_clean_html(fname)
     (plot_dir / f"{fname}.html").write_text(clean_html, encoding="utf-8")
 
-    from .statutes import populate_statutory_mappings
     from .precedents import populate_precedents
+    from .statutes import populate_statutory_mappings
 
     report_data = TitleReportData(cts=cts_num, village=village_name, district=district)
     populate_statutory_mappings(report_data)

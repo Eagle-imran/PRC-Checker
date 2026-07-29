@@ -1,7 +1,7 @@
 """
 Unit tests for BhuNaksha Preflight Engine in prc_checker.preflight.
 """
-from prc_checker.preflight import check_plot_preflight, PreflightResult
+from prc_checker.preflight import PreflightResult, check_plot_preflight
 
 
 def test_preflight_result_model():

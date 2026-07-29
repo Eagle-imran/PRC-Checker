@@ -3,16 +3,15 @@ Browser session driver and MahaBhulekh DOM interaction primitives.
 """
 from __future__ import annotations
 
-import base64
-import json
 import re
 import time
 from pathlib import Path
+
 from playwright.sync_api import TimeoutError as PWTimeout
 
-from .logger import setup_logger
-from .models import CardResult, TitleReportData
 from .artifacts import build_card_artifacts
+from .logger import setup_logger
+from .models import CardResult
 
 logger = setup_logger("prc_checker.session")
 

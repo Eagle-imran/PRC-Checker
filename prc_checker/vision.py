@@ -6,35 +6,35 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import List, Optional, Tuple
+
 from pydantic import BaseModel, Field
 
-from .models import TitleReportData, RiskFlag
+from .models import RiskFlag, TitleReportData
 
 
 class CardVisionRead(BaseModel):
     """Structured data extracted from a Property Card image by AI Vision / OCR pass."""
     cts: str = Field(description="Cadastral Survey Plot Number")
     village: str = Field(description="Division / Village Name")
-    district: Optional[str] = Field(default=None, description="District Code (23=City, 22=Suburban)")
-    sheet_no: Optional[str] = Field(default=None, description="Sheet Number")
-    register_no: Optional[str] = Field(default=None, description="Register Number")
-    page_no: Optional[str] = Field(default=None, description="Page Number")
-    area_sqm: Optional[float] = Field(default=None, description="Total Plot Area in Sq. Mtrs.")
-    tenure: Optional[str] = Field(default=None, description="Tenure Type e.g. Occupant Class I / II / Leasehold")
-    active_lessee: Optional[str] = Field(default=None, description="Current Active Title Holder / Lessee")
-    active_lessor: Optional[str] = Field(default=None, description="Current Active Lessor / Grantor")
-    cancelled_holders: List[str] = Field(default_factory=list, description="Historic / Cancelled Title Holders")
-    transfer_chain: List[Tuple[str, str]] = Field(default_factory=list, description="Sequential title transfer links e.g. [(A, B), (B, C)]")
-    active_lease_deed: Optional[str] = Field(default=None, description="Active Lease Deed Registration Details")
-    original_lease_grant: Optional[str] = Field(default=None, description="Date / Year of Original Lease Grant")
-    lease_status: Optional[str] = Field(default=None, description="Lease Status e.g. Active / Expired / Perpetual")
+    district: str | None = Field(default=None, description="District Code (23=City, 22=Suburban)")
+    sheet_no: str | None = Field(default=None, description="Sheet Number")
+    register_no: str | None = Field(default=None, description="Register Number")
+    page_no: str | None = Field(default=None, description="Page Number")
+    area_sqm: float | None = Field(default=None, description="Total Plot Area in Sq. Mtrs.")
+    tenure: str | None = Field(default=None, description="Tenure Type e.g. Occupant Class I / II / Leasehold")
+    active_lessee: str | None = Field(default=None, description="Current Active Title Holder / Lessee")
+    active_lessor: str | None = Field(default=None, description="Current Active Lessor / Grantor")
+    cancelled_holders: list[str] = Field(default_factory=list, description="Historic / Cancelled Title Holders")
+    transfer_chain: list[tuple[str, str]] = Field(default_factory=list, description="Sequential title transfer links e.g. [(A, B), (B, C)]")
+    active_lease_deed: str | None = Field(default=None, description="Active Lease Deed Registration Details")
+    original_lease_grant: str | None = Field(default=None, description="Date / Year of Original Lease Grant")
+    lease_status: str | None = Field(default=None, description="Lease Status e.g. Active / Expired / Perpetual")
     confidence_score: float = Field(default=1.0, ge=0.0, le=1.0, description="Overall Vision Extraction Confidence")
-    read_notes: Optional[str] = Field(default=None, description="Notes or warnings from AI Vision pass")
+    read_notes: str | None = Field(default=None, description="Notes or warnings from AI Vision pass")
 
-    def evaluate_risk_flags(self) -> List[RiskFlag]:
+    def evaluate_risk_flags(self) -> list[RiskFlag]:
         """Automatically evaluate legal risk flags based on extracted tenure and lease dates."""
-        flags: List[RiskFlag] = []
+        flags: list[RiskFlag] = []
         tenure_lower = (self.tenure or "").lower()
         status_lower = (self.lease_status or "").lower()
 
@@ -74,7 +74,7 @@ class CardVisionRead(BaseModel):
 
         return flags
 
-    def generate_confidence_scorecard(self) -> Tuple[List[dict], int, str]:
+    def generate_confidence_scorecard(self) -> tuple[list[dict], int, str]:
         """Calculate 5-dimension confidence scores (1-5) and total rating."""
         scores = []
 
@@ -125,8 +125,8 @@ class CardVisionRead(BaseModel):
 
     def to_title_report_data(self) -> TitleReportData:
         """Convert Vision Read directly into TitleReportData for report rendering."""
-        from .statutes import populate_statutory_mappings
         from .precedents import populate_precedents
+        from .statutes import populate_statutory_mappings
 
         risk_flags = self.evaluate_risk_flags()
         scores, total_score, rating = self.generate_confidence_scorecard()
@@ -169,9 +169,9 @@ class CardVisionRead(BaseModel):
 def apply_vision_read_to_artifacts(vision_read: CardVisionRead, plot_dir: Path) -> None:
     """Read a CardVisionRead model and re-render populated Title Audit Reports & Legal Briefs in plot_dir."""
     from .reports import (
-        generate_title_report_md,
-        generate_promoter_brief,
         generate_lawyer_brief,
+        generate_promoter_brief,
+        generate_title_report_md,
     )
 
     report_data = vision_read.to_title_report_data()
