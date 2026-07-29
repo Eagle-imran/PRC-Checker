@@ -37,10 +37,16 @@ def build_card_artifacts(
     clean_html = generate_clean_html(fname)
     (plot_dir / f"{fname}.html").write_text(clean_html, encoding="utf-8")
 
+    from .confidence import calculate_confidence_scorecard
     from .precedents import populate_precedents
     from .statutes import populate_statutory_mappings
 
     report_data = TitleReportData(cts=cts_num, village=village_name, district=district)
+    scores, total_score, rating = calculate_confidence_scorecard(report_data)
+    report_data.confidence_scores = scores
+    report_data.total_score = total_score
+    report_data.confidence_rating = rating
+
     populate_statutory_mappings(report_data)
     populate_precedents(report_data)
 

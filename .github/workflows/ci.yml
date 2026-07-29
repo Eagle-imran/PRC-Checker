@@ -24,7 +24,11 @@ jobs:
 
       - name: Run Ruff Code Linter
         run: |
-          ruff check .
+          uv run --with ruff ruff check .
+
+      - name: Run Mypy Type Checker
+        run: |
+          uv run mypy prc_checker/
 
       - name: Run Pytest Test Suite
         run: |

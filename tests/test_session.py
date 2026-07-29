@@ -59,3 +59,44 @@ def test_save_card_artifacts_suburban_district():
         assert res.file_jpg == "Marol_1590/propcard_Marol_1590.jpg"
         assert (outdir / "Marol_1590" / "propcard_Marol_1590.jpg").exists()
         assert (outdir / "Marol_1590" / "propcard_Marol_1590.json").exists()
+
+
+def test_search_not_found_dialog():
+    """Verify search() returns not_found status when dialog contains not found message."""
+    from unittest.mock import patch
+
+    from playwright.sync_api import TimeoutError as PWTimeout
+
+    mock_page = MagicMock()
+    s = Session(mock_page)
+
+    mock_dialog = MagicMock()
+    mock_dialog.message = "Please Enter Valid CTS"
+
+    def trigger_dialog(*args, **kwargs):
+        s._dialog(mock_dialog)
+
+    mock_page.click.side_effect = trigger_dialog
+
+    with patch.object(s, "set_cts", return_value=True), patch.object(s, "wait_opts", side_effect=PWTimeout("timeout")):
+        res = s.search("9999")
+
+    assert res["status"] == "not_found"
+    assert "Please Enter Valid CTS" in res["detail"]
+
+
+def test_refetch_subplot_cascade_flow():
+    """Verify refetch_subplot() invokes reset, select_cascade, and search."""
+    from unittest.mock import patch
+
+    mock_page = MagicMock()
+    s = Session(mock_page)
+
+    with patch.object(s, "reset") as mock_reset, \
+         patch.object(s, "select_cascade") as mock_cascade, \
+         patch.object(s, "search", return_value={"status": "ok", "options": []}) as mock_search:
+        s.refetch_subplot("23", "2301", "Byculla", "1640")
+
+    mock_reset.assert_called_once()
+    mock_cascade.assert_called_once_with("23", "2301", "Byculla")
+    mock_search.assert_called_once_with("1640")

@@ -16,6 +16,7 @@ from .dashboard import generate_dashboard_html
 from .exporters import generate_excel_and_csv, generate_sqlite
 from .logger import setup_logger
 from .models import CardResult, Manifest
+from .preflight import check_plot_preflight
 from .session import ANCHOR, SUBURBAN_OFFICES, Session
 
 
@@ -42,6 +43,14 @@ def run(args) -> int:
     if args.anchor:
         numbers.insert(0, ANCHOR["cts"])
         logger.info(f"Anchor verification enabled: {ANCHOR['village']} {ANCHOR['cts']} (expects {ANCHOR['expect']} sq.m)")
+
+    # Advisory Preflight probe: fast HTTP ping before Playwright launch
+    for cts in numbers:
+        pf = check_plot_preflight(args.village, cts, district=args.district)
+        if pf.exists:
+            logger.info(f"Preflight probe OK for CTS {cts}: {pf.response_time_ms:.1f} ms")
+        else:
+            logger.info(f"Preflight probe info for CTS {cts}: {pf.detail} (proceeding to browser query)")
 
     results: list[CardResult] = []
     t = len(numbers)

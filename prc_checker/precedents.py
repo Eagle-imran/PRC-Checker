@@ -19,7 +19,7 @@ PRECEDENT_REGISTRY: list[tuple[list[str], PrecedentRef]] = [
     ),
     # 2. C.I.T. / Trust Lease Extension & FSI Rights
     (
-        ["cit", "c.i.t.", "trust", "lease", "leasehold", "भाडेपट्टा"],
+        ["cit", "c.i.t.", "government trust", "c.i.t. trust", "cit trust", "c.i.t. lease", "cit leasehold"],
         PrecedentRef(
             case_name="Bombay Environmental Action Group v. State of Maharashtra",
             citation="2019 SCC OnLine Bom 412 (Bombay High Court)",

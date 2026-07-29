@@ -76,60 +76,17 @@ class CardVisionRead(BaseModel):
 
     def generate_confidence_scorecard(self) -> tuple[list[dict], int, str]:
         """Calculate 5-dimension confidence scores (1-5) and total rating."""
-        scores = []
-
-        # 1. Image Clarity
-        clarity_score = 5 if self.confidence_score >= 0.95 else (4 if self.confidence_score >= 0.85 else 3)
-        scores.append({
-            "dimension": "Image Clarity & Resolution",
-            "score": clarity_score,
-            "notes": f"OCR confidence score: {int(self.confidence_score * 100)}%"
-        })
-
-        # 2. OCR Text Extraction
-        fields_present = sum(1 for f in [self.sheet_no, self.register_no, self.page_no] if f)
-        text_score = 5 if fields_present == 3 else (4 if fields_present >= 1 else 3)
-        scores.append({
-            "dimension": "OCR Register Index Extraction",
-            "score": text_score,
-            "notes": f"Extracted {fields_present}/3 index fields (Sheet, Register, Page)"
-        })
-
-        # 3. Tenure Certainty
-        tenure_score = 5 if self.tenure else 2
-        scores.append({
-            "dimension": "Tenure & Ownership Classification",
-            "score": tenure_score,
-            "notes": f"Tenure identified as: '{self.tenure}'" if self.tenure else "Tenure type pending verification"
-        })
-
-        # 4. Plot Area & Boundary Consistency
-        area_score = 5 if self.area_sqm else 2
-        scores.append({
-            "dimension": "Plot Area & Survey Boundary",
-            "score": area_score,
-            "notes": f"Area verified: {self.area_sqm} Sq. Mtrs." if self.area_sqm else "Plot area pending verification"
-        })
-
-        # 5. Encumbrance & Title Chain Flow
-        chain_score = 5 if self.transfer_chain else (4 if self.active_lessee else 2)
-        scores.append({
-            "dimension": "Encumbrance & Title Flow Continuity",
-            "score": chain_score,
-            "notes": f"Sequential title chain verified ({len(self.transfer_chain)} links)" if self.transfer_chain else "Title flow verified from active lessee"
-        })
-
-        total = sum(item["score"] for item in scores)
-        rating = "HIGH CONFIDENCE" if total >= 21 else ("MEDIUM CONFIDENCE" if total >= 15 else "LOW CONFIDENCE")
-        return scores, total, rating
+        from .confidence import calculate_confidence_scorecard
+        return calculate_confidence_scorecard(self)
 
     def to_title_report_data(self) -> TitleReportData:
         """Convert Vision Read directly into TitleReportData for report rendering."""
+        from .confidence import calculate_confidence_scorecard
         from .precedents import populate_precedents
         from .statutes import populate_statutory_mappings
 
         risk_flags = self.evaluate_risk_flags()
-        scores, total_score, rating = self.generate_confidence_scorecard()
+        scores, total_score, rating = calculate_confidence_scorecard(self)
 
         report_data = TitleReportData(
             cts=self.cts,

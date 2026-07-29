@@ -1,5 +1,13 @@
 """
 Browser session driver and MahaBhulekh DOM interaction primitives.
+
+External IPC Protocol (stdout):
+    CAPTCHA_IMAGE: <absolute_path_to_png>   — emitted for external vision/OCR agent
+    WAITING_FOR_CAPTCHA [<attempt>/<tries>]...  — emitted for external vision/OCR agent
+
+These print(flush=True) calls in fetch_card() are INTENTIONAL. They form a machine-readable
+IPC channel for external agents or automated solvers reading stdout to solve CAPTCHAs via
+.captcha_input.txt. Do NOT replace with logger.info().
 """
 from __future__ import annotations
 
