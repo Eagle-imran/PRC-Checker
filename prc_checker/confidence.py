@@ -4,7 +4,7 @@ for TitleReportData. Decoupled from vision extraction — works with any data so
 """
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, cast
 
 
 def calculate_confidence_scorecard(report_data: Any) -> tuple[list[dict[str, Any]], int, str]:
@@ -21,7 +21,7 @@ def calculate_confidence_scorecard(report_data: Any) -> tuple[list[dict[str, Any
         Tuple of (scores_list, total_score, rating_string)
         rating is "HIGH CONFIDENCE" (>=21), "MEDIUM CONFIDENCE" (>=15), or "LOW CONFIDENCE" (<15)
     """
-    scores = []
+    scores: list[dict[str, Any]] = []
 
     # 1. Image Clarity & Resolution
     confidence_score = getattr(report_data, "confidence_score", None)
@@ -43,7 +43,7 @@ def calculate_confidence_scorecard(report_data: Any) -> tuple[list[dict[str, Any
     sheet_no = getattr(report_data, "sheet_no", None)
     register_no = getattr(report_data, "register_no", None)
     page_no = getattr(report_data, "page_no", None)
-    fields_present = sum(1 for f in [sheet_no, register_no, page_no] if f)
+    fields_present = sum(1 for f in [sheet_no, register_no, page_no] if bool(f))
     text_score = 5 if fields_present == 3 else (4 if fields_present >= 1 else 3)
     scores.append({
         "dimension": "OCR Register Index Extraction",
@@ -72,13 +72,13 @@ def calculate_confidence_scorecard(report_data: Any) -> tuple[list[dict[str, Any
     # 5. Encumbrance & Title Chain Flow
     transfer_chain = getattr(report_data, "transfer_chain", None)
     active_lessee = getattr(report_data, "active_lessee", None)
-    chain_score = 5 if transfer_chain else (4 if active_lessee else 2)
+    chain_score = 5 if bool(transfer_chain) else (4 if bool(active_lessee) else 2)
     scores.append({
         "dimension": "Encumbrance & Title Flow Continuity",
         "score": chain_score,
         "notes": f"Sequential title chain verified ({len(transfer_chain)} links)" if transfer_chain else f"Title flow verified from active lessee: {active_lessee or 'pending'}"
     })
 
-    total = sum(item["score"] for item in scores)
+    total = sum(int(cast(int, item["score"])) for item in scores)
     rating = "HIGH CONFIDENCE" if total >= 21 else ("MEDIUM CONFIDENCE" if total >= 15 else "LOW CONFIDENCE")
     return scores, total, rating

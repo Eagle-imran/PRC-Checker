@@ -81,7 +81,7 @@ def run(args) -> int:
                     office, village_val = s.locate_village(args.district, args.village, getattr(args, 'office', None))
                     logger.info(f"Located office={office} ({SUBURBAN_OFFICES.get(office, 'Mumbai City')})")
                 else:
-                    s.select_cascade(args.district, office, village_val)
+                    s.select_cascade(args.district, office, village_val or "")
                 page.wait_for_timeout(1500)
 
                 found = s.search(cts)
@@ -117,7 +117,7 @@ def run(args) -> int:
                     logger.info(f"Fetched -> {r.status} {r.file_jpg or ''}")
                     results.append(r)
                     if len(opts) > 1 and idx < len(opts) - 1:
-                        s.refetch_subplot(args.district, office, village_val, cts)
+                        s.refetch_subplot(args.district, office, village_val or "", cts)
             except Exception as e:
                 logger.error(f"Error fetching CTS {cts}: {e}")
                 results.append(CardResult(
