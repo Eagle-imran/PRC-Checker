@@ -32,7 +32,7 @@
 ```mermaid
 graph TD
 {% for source, target in report.transfer_chain %}
-    N{{ loop.index0 }}["{{ source }}"] --> N{{ loop.index }}["{{ target }}"]
+    N{{ loop.index0 }}["{{ source | replace('"', "'") }}"] --> N{{ loop.index }}["{{ target | replace('"', "'") }}"]
 {% endfor %}
 ```
 {% else %}
@@ -42,7 +42,7 @@ graph TD
 ## Block 5: Legal Risk Flags & Verification Points
 {% if report.risk_flags %}
 {% for flag in report.risk_flags %}
-> [!{{ 'WARNING' if flag.severity == 'HIGH' else 'NOTE' }}]
+> [!{{ 'CAUTION' if flag.severity == 'CRITICAL' else ('WARNING' if flag.severity == 'HIGH' else 'NOTE') }}]
 > **{{ flag.risk_type }}**: {{ flag.description }}
 
 {% endfor %}

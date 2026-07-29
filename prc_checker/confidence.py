@@ -79,6 +79,7 @@ def calculate_confidence_scorecard(report_data: Any) -> tuple[list[dict[str, Any
         "notes": f"Sequential title chain verified ({len(transfer_chain)} links)" if transfer_chain else f"Title flow verified from active lessee: {active_lessee or 'pending'}"
     })
 
-    total = sum(int(cast(int, item["score"])) for item in scores)
-    rating = "HIGH CONFIDENCE" if total >= 21 else ("MEDIUM CONFIDENCE" if total >= 15 else "LOW CONFIDENCE")
+    raw_score = sum(int(cast(int, item["score"])) for item in scores)
+    total = raw_score * 4
+    rating = "HIGH CONFIDENCE" if total >= 84 else ("MEDIUM CONFIDENCE" if total >= 60 else "LOW CONFIDENCE")
     return scores, total, rating

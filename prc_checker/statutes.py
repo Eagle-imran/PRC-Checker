@@ -19,7 +19,7 @@ STATUTORY_REGISTRY: list[tuple[list[str], StatutoryMapping]] = [
     ),
     # 2. Collector Class II Conversion GR (2019 / 2024)
     (
-        ["class ii", "class 2", "collector", "conversion", "freehold"],
+        ["class ii", "class 2", "collector conversion", "conversion to class i"],
         StatutoryMapping(
             statute="Revenue & Forests Dept. Resolution (Class II Conversion)",
             section="GR No. Class-2019/CR-18/L-1",

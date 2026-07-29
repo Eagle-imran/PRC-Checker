@@ -20,7 +20,7 @@ def test_confidence_scorecard_high_confidence():
     )
     scores, total, rating = calculate_confidence_scorecard(report)
     assert len(scores) == 5
-    assert total >= 21
+    assert total >= 84
     assert rating == "HIGH CONFIDENCE"
 
 
@@ -29,7 +29,7 @@ def test_confidence_scorecard_low_confidence():
     report = TitleReportData(cts="123", village="Test")
     scores, total, rating = calculate_confidence_scorecard(report)
     assert len(scores) == 5
-    assert total < 15
+    assert total < 60
     assert rating == "LOW CONFIDENCE"
 
 
@@ -43,5 +43,5 @@ def test_confidence_scorecard_medium_confidence():
         active_lessee="Test Party"
     )
     _scores, total, rating = calculate_confidence_scorecard(report)
-    assert 15 <= total < 21
+    assert 60 <= total < 84
     assert rating == "MEDIUM CONFIDENCE"
