@@ -81,14 +81,21 @@ class Session:
         self.page.wait_for_selector(target_sel, state="attached", timeout=20000)
         self.page.wait_for_function(
             "([sel, val]) => { const s = document.querySelector(sel);"
-            " return s && [...s.options].some(o => o.value === val); }",
+            " return s && [...s.options].some(o => o.value === val || o.text.trim() === val); }",
             arg=[target_sel, value],
             timeout=20000,
         )
-        self.page.select_option(target_sel, value=value)
+        try:
+            self.page.select_option(target_sel, value=value)
+        except Exception:
+            self.page.select_option(target_sel, label=value)
+
         self.page.eval_on_selector(target_sel, """function(s, val) {
-            s.value = val;
-            s.dispatchEvent(new Event('change', { bubbles: true }));
+            const opt = [...s.options].find(o => o.value === val || o.text.trim() === val);
+            if (opt) {
+                s.value = opt.value;
+                s.dispatchEvent(new Event('change', { bubbles: true }));
+            }
         }""", value)
         if then:
             self.wait_opts(then)
@@ -140,18 +147,19 @@ class Session:
         return False
 
     def search(self, cts: str) -> dict:
-        self.page.wait_for_timeout(1000)
+        self.page.wait_for_timeout(800)
         if not self.set_cts(cts):
             return {"status": "error", "detail": "CTS field would not hold value"}
         self.page.wait_for_timeout(300)
         self.last_dialog = None
         self.page.click(P + "btnsearchfind")
+        search_timeout = 3500 if "/" in cts else 15000
         try:
-            self.wait_opts("ddlsurveyno", timeout=15000)
+            self.wait_opts("ddlsurveyno", timeout=search_timeout)
         except PWTimeout:
             msg = self.last_dialog or ""
-            if any(k in msg for k in NOT_FOUND):
-                return {"status": "not_found", "detail": msg.strip()}
+            if "/" in cts or any(k in msg for k in NOT_FOUND):
+                return {"status": "not_found", "detail": msg.strip() or "CTS slash query direct search not found"}
             return {"status": "error", "detail": msg.strip() or "search timed out"}
         return {"status": "ok", "options": self.opts("ddlsurveyno")}
 

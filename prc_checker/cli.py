@@ -65,7 +65,7 @@ def run(args) -> int:
         def block_heavy_resources(route):
             url = route.request.url.lower()
             if any(ext in url for ext in [".woff", ".woff2", ".ttf", "font", "fontawesome"]):
-                route.fulfill(status=200, body=b"")
+                route.abort()
             else:
                 route.continue_()
         page.route("**/*", block_heavy_resources)
